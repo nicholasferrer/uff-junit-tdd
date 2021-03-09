@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,53 +23,62 @@ public class ProcessadorDeBoletosTest {
   private ProcessadorDeBoletos ProcessadorDeBoletos;
 	
 	@BeforeEach
-	public void inicializa() {
+	public void init() {
 		ProcessadorDeBoletos = new ProcessadorDeBoletos();
 	}
 	
 	@DisplayName("Testa que um pagamento é criado para cada boleto da lista")
 	@Test
-	public void testaCriaçãoDePagamentos() {
+	public void testCriaçãoDePagamentosPorBoleto() {
 		Fatura faturaA = new Fatura(new Date(), 1450, "Nicholas Ferrer");
 
 		Boleto boletoA1 = new Boleto(faturaA, new Date(), "A", 450);
 		Boleto boletoA2 = new Boleto(faturaA, new Date(), "B", 200);
 
-		List<Boleto> lista_de_boletos = Arrays.asList(boletoA1, boletoA2);
+		ArrayList<Boleto> listaDeBoletos = new ArrayList();
 
-		Integer numero_de_boletos_processados = ProcessadorDeBoletos.init(lista_de_boletos);
+		listaDeBoletos.add(boletoA1);
+		listaDeBoletos.add(boletoA2);
 
-		Pagamento pagamento = new Pagamento();
+		Integer numBoletosProcessados = ProcessadorDeBoletos.init(listaDeBoletos);
 
-		Assertions.assertEquals(numero_de_boletos_processados, pagamento.retornarQuantidadeDePagamentos());
+		Pagamento pagamento = new Pagamento(boletoA1, new Date(), 0, "BOLETO");
+
+		Assertions.assertEquals(numBoletosProcessados, pagamento.QtdDePagamentos());
 	}
 
   @DisplayName("Testa se boletos cuja soma de valores pagos é igual ou maior ao valor da fatura e resulta em fatura PAGA")
   @Test
-  public void testaStatusDeFaturaPaga() {
-		Fatura faturaB = new Fatura(new Date(), 1450, "Mariana Freire");
+  public void testFaturaPaga() {
+		Fatura faturaB = new Fatura(new Date(), 1100, "Mariana Freire");
 
-		Boleto boletoB1 = new Boleto(faturaB, new Date(), "E",450);
+		Boleto boletoB1 = new Boleto(faturaB, new Date(), "E",100);
 		Boleto boletoB2 = new Boleto(faturaB, new Date(), "F", 1000);
 
-		List<Boleto> lista_de_boletos = Arrays.asList(boletoB1, boletoB2);
+		ArrayList<Boleto> listaDeBoletos = new ArrayList();
 
-		ProcessadorDeBoletos.init(lista_de_boletos);
+		listaDeBoletos.add(boletoB1);
+		listaDeBoletos.add(boletoB2);
+
+		ProcessadorDeBoletos.init(listaDeBoletos);
 
 		Assertions.assertEquals(faturaB.status, "PAGA");
   }
 
 	@DisplayName("Testa se a soma dos boletos processados é menor que o valor da fatura e resulta em fatura NAO_PAGA")
 	@Test
-	public void testaStatusDeFaturaNãoPaga() {
-		Fatura faturaC = new Fatura(new Date(), 1450, "Cleide Santos");
+	public void testFaturaNãoPaga() {
+		Fatura faturaC = new Fatura(new Date(), 1700, "Cleide Santos");
 
-		Boleto boletoC1 = new Boleto(faturaC, new Date(), "E", 450);
+		Boleto boletoC1 = new Boleto(faturaC, new Date(), "E", 300);
 		Boleto boletoC2 = new Boleto(faturaC, new Date(), "F", 1000);
 
-		List<Boleto> lista_de_boletos = Arrays.asList(boletoC1, boletoC2);
+		ArrayList<Boleto> listaDeBoletos = new ArrayList();
 
-		ProcessadorDeBoletos.init(lista_de_boletos);
+		listaDeBoletos.add(boletoC1);
+		listaDeBoletos.add(boletoC2);
+
+		ProcessadorDeBoletos.init(listaDeBoletos);
 
 		Assertions.assertEquals(faturaC.status, "NAO_PAGA");
 	}

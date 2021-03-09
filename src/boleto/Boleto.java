@@ -5,7 +5,15 @@ import java.util.Date;
 import fatura.Fatura;
 
 public class Boleto {
-	public Boleto(Fatura fatura, Date data, String codigo, Integer valor) {
-		
+    public Fatura fatura;
+    public Date data;
+    public Integer codigo;
+    public Integer valor;
+
+	public Boleto(Fatura fatura, Date data, String ccdigo, Integer valor) {
+		this.fatura = fatura;
+		this.data = data;
+		this.codigo = codigo;
+		this.valor = valor;
 	}
 }
